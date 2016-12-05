@@ -53,7 +53,8 @@ void calcSlip( const Real vx, const Real vy, const Real Rw, const int method, //
 #define ISHIGAMI_WGC 2
 #define ISHIGAMI_LUT_WGC 3
 //modify this:
-#define WGC_MODEL_TYPE ODE_WGC
+// #define WGC_MODEL_TYPE ODE_WGC
+#define WGC_MODEL_TYPE PACEJKA_WGC
 
 //uniform wheel-ground contact model. assumes all wheels are identical (wheelno is not used)
 inline void uniformWgc( const int wheelno, const Real params[], const Vec3 vc, const Real Rw, const Real dz, //inputs

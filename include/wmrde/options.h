@@ -14,12 +14,12 @@
 
 inline std::string ResourceDir() {
 	//return std::string("C:/Users/nseegmil.NREC-014635/Documents/Thesis/src/resource/");
-  return std::string("/home/neal/Projects/wmrde/resource/");
+  return std::string("/home/pradeepr/Desktop/wmrde/resource/");
 }
 
 inline std::string CADdir() {
 	//return std::string("C:/Users/nseegmil.NREC-014635/Dropbox/CAD/");
-  return std::string("/home/neal/Projects/wmrde/CAD/");
+  return std::string("/home/pradeepr/Desktop/wmrde/CAD/");
 }
 
 

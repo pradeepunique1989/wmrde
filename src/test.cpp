@@ -1407,8 +1407,8 @@ void test_simulate() {
 
 	//uncomment one of the following:
 	//for animation, must also uncomment the corresponding scene function below
-//	zoe(mdl,state,qvel);
-	rocky(mdl,state,qvel);
+	zoe(mdl,state,qvel);
+	// rocky(mdl,state,qvel);
 //	talon(mdl,state,qvel);
 
 	//also uncomment the corresponding scene function below!
@@ -1481,8 +1481,8 @@ void test_simulate() {
 
 		//uncomment the scene function that corresponds to the model function above
 
-//		zoeScene(mdl, anim);
-		rockyScene(mdl, anim);
+		zoeScene(mdl, anim);
+		// rockyScene(mdl, anim);
 //		talonScene(mdl, tcontacts, anim);
 
 		for (int i=0; i<surfs.size(); i++)
