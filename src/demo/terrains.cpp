@@ -6,6 +6,69 @@ void flat(SurfaceVector& surfaces) {
 	surfaces.emplace_back(new PlaneSurf(pec));
 
 }
+void manyRamps(SurfaceVector& surfaces, const TerrainConfig& terrainInfo) {
+    // std::vector<double> segmentLengths;
+    // std::vector<double> segmentSlope;
+    //
+    // segmentLengths.push_back(2);
+    // segmentSlope.push_back(0);
+    //
+    // segmentLengths.push_back(10);
+    // // segmentSlope.push_back(10);
+    // segmentSlope.push_back(10);
+    //
+    // segmentLengths.push_back(10);
+    // // segmentSlope.push_back(-10);
+    // segmentSlope.push_back(0);
+    //
+    // segmentLengths.push_back(10);
+    // segmentSlope.push_back(-10);
+    //
+    // segmentLengths.push_back(8);
+    // segmentSlope.push_back(0);
+
+
+    double x = 0;
+    double y = 0;
+    double z = 0.01;
+    const double segmentWidth = 10;
+
+    surfaces.emplace_back(new TriMeshSurf());
+    TriMeshSurf* surf_ptr = dynamic_cast<TriMeshSurf*>(surfaces.back().get());
+
+    
+    // Set the first two vertices (first edge)
+    Vec3 v;
+    setVec3(x,y+segmentWidth/2,z,v);
+    surf_ptr->add_vertex(v);
+    setVec3(x,y-segmentWidth/2,z,v);
+    surf_ptr->add_vertex(v);
+
+    int lastEdgeTopVertexIndex = 0;
+    int lastEdgeBottomVertexIndex = 1;
+
+    for (int i = 0; i < terrainInfo.numOfSegments ; i++)
+    {
+        const double nx = x + terrainInfo.segmentLength[i];
+        const double ny = y;
+        const double nz = z + std::tan(terrainInfo.segmentSlope[i] * M_PI/180.0f)*terrainInfo.segmentLength[i];
+        setVec3(nx,ny+segmentWidth/2,nz,v);
+        surf_ptr->add_vertex(v);
+        setVec3(nx,ny-segmentWidth/2,nz,v);
+        surf_ptr->add_vertex(v);
+
+        const int edgeTopVertexIndex = lastEdgeBottomVertexIndex + 1;
+        const int edgeBottomVertexIndex = edgeTopVertexIndex + 1;
+
+        surf_ptr->add_quad(lastEdgeTopVertexIndex,lastEdgeBottomVertexIndex,edgeBottomVertexIndex,edgeTopVertexIndex);
+
+        lastEdgeTopVertexIndex = edgeTopVertexIndex;
+        lastEdgeBottomVertexIndex = edgeBottomVertexIndex;
+        x = nx;
+        y = ny;
+        z = nz;
+    }
+}
 
 //generate a TriMeshSurf object for a ramp
 void ramp(SurfaceVector& surfaces) {

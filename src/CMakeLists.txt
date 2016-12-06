@@ -103,7 +103,6 @@ file(GLOB_RECURSE SRCS
 )
 
 set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}") #added by Neal
-find_package(Eigen REQUIRED) #added by Neal
 
 include_directories( 
   ../include #added by Neal
@@ -121,7 +120,7 @@ add_executable(OgreApp WIN32 ${HDRS} ${SRCS})
 set_target_properties(OgreApp PROPERTIES DEBUG_POSTFIX _d)
  
 target_link_libraries(OgreApp ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES}
-  /usr/local/lib/libode.a) #added by Neal
+    ) #added by Neal
  
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/bin)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/media)

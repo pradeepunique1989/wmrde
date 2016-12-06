@@ -10,9 +10,13 @@
 #include <wmrde/surface/TriMeshSurf.h>
 #include <wmrde/surface/GridSurf.h>
 
+#include <wmrde/TerrainConfig.h>
+
 void flat(SurfaceVector& surfaces);
 void ramp(SurfaceVector& surfaces);
 void grid(SurfaceVector& surfaces, const std::string FileName);
+
+void manyRamps(SurfaceVector& surfaces,const TerrainConfig& terrainInfo);
 
 
 #endif

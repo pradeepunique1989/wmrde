@@ -59,8 +59,8 @@ bool BaseApplication::configure(void)
     // Show the configuration dialog and initialise the system
     // You can skip this and use root.restoreConfig() to load configuration
     // settings if you were sure there are valid ones saved in ogre.cfg
-	//if(mRoot->restoreConfig()) //added by Neal, skip dialog
-    if(mRoot->showConfigDialog())
+	// if() //added by Neal, skip dialog
+    if(mRoot->restoreConfig() || mRoot->showConfigDialog())
     {
         // If returned true, user clicked OK so initialise
         // Here we choose to let the system create a default rendering window by passing 'true'
@@ -393,10 +393,6 @@ bool BaseApplication::keyPressed( const OIS::KeyEvent &arg )
     {
         mShutDown = true;
     }
-	else if (arg.key == OIS::KC_P) //added by Neal
-	{
-		mPause = !mPause;
-	}
 
     mCameraMan->injectKeyDown(arg);
     return true;

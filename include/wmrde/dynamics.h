@@ -6,6 +6,7 @@
 
 #include <wmrde/kinematics.h>
 
+
 //classes to reduce the number of function parameters
 //always pass by reference!
 
@@ -68,6 +69,5 @@ void forwardDynForceBalance(const WmrModel& mdl, const Real state0[], const Real
 //TODO forwardDynUnc()
 
 void odeDyn(const Real time, const Real y[], const WmrModel& mdl, const SurfaceVector& surfaces, ContactGeom* contacts, const Real dt, //inputs
-	Real ydot[], HomogeneousTransform HT_parent[]); //outputs
-
-#endif //_WMRDE_DYNAMICS_H_
+	Real ydot[], HomogeneousTransform HT_parent[], HomogeneousTransform HT_world[]); //outputs
+#endif

@@ -115,4 +115,17 @@ material MyMaterials/Terrain
 	}
 }
 
+material MyMaterials/Rockwall
+{
+        technique
+        {
+                pass
+                {
+                        texture_unit
+                        {
+                                texture floor.jpg
+                        }
+                }
+        }
+}
 

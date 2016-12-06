@@ -1,5 +1,6 @@
 #include <wmrde/dynamics.h>
 
+
 //Xup:		size nf array of Plucker transforms, Xup[i]^T*f transforms spatial *force* vector f from frame i to parent coords
 //Is_subt:	size nf array of spatial inertias, Is_subt[i] is the inertia of the subtree rooted at frame i
 void subtreeInertias(const WmrModel &mdl, const Mat6b Xup[], Mat6b Is_subt[]) {
@@ -766,9 +767,8 @@ void forwardDynForceBalance(const WmrModel& mdl, const Real state0[], const Real
 	return;
 }
 
-
 void odeDyn(const Real time, const Real y[], const WmrModel& mdl, const SurfaceVector& surfaces, ContactGeom* contacts, const Real dt, //inputs
-	Real ydot[], HomogeneousTransform HT_parent[] ) { //outputs
+	Real ydot[], HomogeneousTransform HT_parent[] , HomogeneousTransform HT_world[]) { //outputs
 
 	const int MAXNS = NUMSTATE(WmrModel::MAXNF);
 	const int MAXNV = NUMQVEL(WmrModel::MAXNF);
@@ -790,12 +790,10 @@ void odeDyn(const Real time, const Real y[], const WmrModel& mdl, const SurfaceV
 	copyVec(ns,y,state);
 	copyVec(nv,y+ns,qvel);
 	copyVec(na,y+ns+nv,u.interr);
-
 	//get control inputs
 	mdl.controller(mdl, time, y, u.cmd, 0);
 
 	//convert state to Homogeneous Transforms
-	HomogeneousTransform HT_world[WmrModel::MAXNF];
 	stateToHT(mdl,y,HT_parent,HT_world);
 
 	//update contact geometry

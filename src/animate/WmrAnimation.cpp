@@ -12,6 +12,19 @@ WmrAnimation::~WmrAnimation(void)
 {
 }
 
+// added by PR
+bool WmrAnimation::keyPressed( const OIS::KeyEvent &arg )
+{
+    bool baseReturnValue = BaseApplication::keyPressed(arg);
+
+    if (arg.key == OIS::KC_P)
+    {
+        mPause = !mPause;
+    }
+
+    return baseReturnValue && true;
+}
+
 //-------------------------------------------------------------------------------------
 void WmrAnimation::createScene(void)
 {
@@ -23,6 +36,23 @@ void WmrAnimation::createScene(void)
     Ogre::Light* light = mSceneMgr->createLight("MainLight");
     light->setPosition(20.0f, 80.0f, 50.0f);
 
+}
+void WmrAnimation::drawWorldMap()
+{
+// Create ground
+  Ogre::Plane plane(Ogre::Vector3::UNIT_Z, 0);
+ 
+  Ogre::MeshManager::getSingleton().createPlane(
+    "ground",
+    Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+    plane, 50, 50, 20, 20, true, 1, 5, 5, Ogre::Vector3::UNIT_Y);
+ 
+  Ogre::Entity* groundEntity = mSceneMgr->createEntity("ground");
+  mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(groundEntity);
+ 
+  groundEntity->setMaterialName("MyMaterials/Rockwall");
+  // groundEntity->setMaterialName("MyMaterials/FlatVertexColor");
+  groundEntity->setCastShadows(false);
 }
 
 void WmrAnimation::addNode(const int parent_node_index) {
@@ -395,7 +425,7 @@ void WmrAnimation::addEntityTriMeshSurf(TriMeshSurf* surf) {
 	manual->estimateIndexCount(3*nt);
 
 	manual->begin("MyMaterials/FlatVertexColor", Ogre::RenderOperation::OT_TRIANGLE_LIST);
-	Ogre::ColourValue C(0.0,1.0,1.0);
+	Ogre::ColourValue C(0.1,0.12,0.12);
 
 	for (int tno=0; tno<nt; tno++) { //loop over triangles
 		for (int vno=0; vno<3; vno++) { //loop over vertices (in triangle)

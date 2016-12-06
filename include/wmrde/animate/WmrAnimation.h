@@ -36,7 +36,7 @@ public:
     WmrAnimation(void);
     virtual ~WmrAnimation(void);
 	virtual void go(void); //override go() in BaseApplication
-
+	void drawWorldMap();
 	void start(void); //calls setup in BaseApplication, must call this first
 	bool updateRender(void);
 
@@ -79,6 +79,7 @@ public:
 
 protected:
     virtual void createScene(void);
+    virtual bool keyPressed( const OIS::KeyEvent &arg );
 };
 
 #endif //__WMRDE_WMRANIMATION_H_
