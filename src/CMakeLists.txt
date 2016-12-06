@@ -113,6 +113,7 @@ include_directories(
 	${OGRE_Overlay_INCLUDE_DIRS}
   ${EIGEN_INCLUDE_DIRS} #added by Neal
   /usr/local/include #added by Neal, TODO /ode necessary?
+  /usr/include/eigen3
 )
  
 add_executable(OgreApp WIN32 ${HDRS} ${SRCS})
