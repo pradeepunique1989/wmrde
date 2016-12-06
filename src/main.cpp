@@ -1,23 +1,38 @@
 #include <wmrde/main.h>
+#include <ros/ros.h>
+#include <std_msgs/Float32.h>
 
-//int main()
+volatile float speed_msg = 0.0;
+void chatterCallback(const std_msgs::Float32::ConstPtr& msg)
+{
+  ROS_INFO("I heard: [%f]", msg->data);
+  speed_msg = msg->data;
+}
+
 int main(int argc, char *argv[])
 {
+    ros::init(argc, argv, "listener");
+
     boost::thread simThread(&simulatorThread);
+    // ros::spin();
     simThread.join();
-	std::cin.get();
+
     return 0;
 }
 
 
+
 void simulatorThread()
 {
+    ros::NodeHandle n;
+    ros::Subscriber sub = n.subscribe("chatter", 1000, chatterCallback);
+
     //set simulation options
     bool do_dyn = true; //do dynamic simulation, else kinematic
     bool ideal_actuators = false;
     bool do_anim = true; //do animation
 
-    const int dt_ms = 10;
+    const int dt_ms = 1;
     const Real dtSim = dt_ms / 1000.0;
     Real time = 0;
 
@@ -36,6 +51,7 @@ void simulatorThread()
      * also uncomment the corresponding scene function below!
      */
     rocky( mdl,state,qvel);
+    // zoe( mdl,state,qvel);
 
 
     //initialize wheel-ground contact model
@@ -111,6 +127,7 @@ void simulatorThread()
 
     //uncomment the scene function that corresponds to the model function above
     rockyScene(mdl, anim);
+    // zoeScene(mdl, anim);
 
     // render the surfaces
     for (int i=0; i<surfs.size(); i++)
@@ -122,6 +139,7 @@ void simulatorThread()
     // Start simulation
     while(true)
     {
+        ros::spinOnce();
 
         odeDyn(time, y, mdl, surfs, contacts, dtSim, ydot, HT_parent, HT_world);
 
@@ -134,7 +152,8 @@ void simulatorThread()
         addmVec(ny,ydot,dtSim,y);
         time += dtSim;
 
-        simInterface.setSpeedCmd(0.5);
+        std::cout <<"\n Here\n"<<std::endl;
+        // simInterface.setSpeedCmd(0.1);
 
         // Render the frame
         anim.updateNodesLines(nf, HT_parent, nw + nt, contacts);

@@ -32,3 +32,4 @@ void sub_initTrackContactGeom(const WmrModel& mdl, TrackContactGeom* contacts);
 WmrAnimation anim;
 SimInterface simInterface;
 TerrainConfig terrainInfo = TerrainConfig::loadFromFile();
+

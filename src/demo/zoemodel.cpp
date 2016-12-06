@@ -188,6 +188,7 @@ void zoeController(const WmrModel& mdl, const Real time, const Real state[], //i
 
 	Real speed,turnrad; //commanded speed, turn radius
 
+    // speed = simInterface.getLastSpeedCmd();
 	speed = .5;
 	turnrad = 1000;
 

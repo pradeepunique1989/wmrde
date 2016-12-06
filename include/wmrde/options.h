@@ -13,13 +13,14 @@
 #define WMRSIM_ENABLE_ANIMATION 1 //include WmrAnimation, OGRE dependencies
 
 inline std::string ResourceDir() {
-	//return std::string("C:/Users/nseegmil.NREC-014635/Documents/Thesis/src/resource/");
-  return std::string("/home/pradeepr/Desktop/wmrde/resource/");
+  return std::string("/home/rpradeep/Documents/catkin_ws/src/wmrde/resource/");
+  // return std::string("/home/pradeepr/Desktop/wmrde/resource/");
 }
 
 inline std::string CADdir() {
 	//return std::string("C:/Users/nseegmil.NREC-014635/Dropbox/CAD/");
-  return std::string("/home/pradeepr/Desktop/wmrde/CAD/");
+  return std::string("/home/rpradeep/Documents/catkin_ws/src/wmrde/CAD/");
+  // return std::string("/home/pradeepr/Desktop/wmrde/CAD/");
 }
 
 

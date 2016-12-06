@@ -221,7 +221,7 @@ void rockyController(const WmrModel& mdl, const Real time, const Real state[], /
 
 	Real speed,turnrad; //commanded speed, turn radius
 
-	speed = 0.5;
+    speed = 0;//simInterface.getLastSpeedCmd();
 	turnrad = 1000;
 
 	

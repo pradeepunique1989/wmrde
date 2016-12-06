@@ -1,6 +1,9 @@
 #ifndef _WMRDE_ROCKYMODEL_H_
 #define _WMRDE_ROCKYMODEL_H_
 
+#include <wmrde/SimInterface.h>
+extern volatile SimInterface simInterface;
+
 #include <wmrde/state.h>
 #include <wmrde/algebra/matrix.h>
 #include <wmrde/wheelgroundcontact.h>

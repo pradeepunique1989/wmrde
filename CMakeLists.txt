@@ -14,9 +14,9 @@
 #      http://www.ogre3d.org/tikiwiki/
 #-----------------------------------------------------------------------------
 #*/
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8.3)
  
-project(OgreApp)
+project(wmrde)
  
 if(WIN32)
 	set(CMAKE_MODULE_PATH "$ENV{OGRE_HOME}/CMake/;${CMAKE_MODULE_PATH}")
@@ -104,8 +104,13 @@ file(GLOB_RECURSE SRCS
 
 set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}") #added by Neal
 
+
+find_package(catkin REQUIRED COMPONENTS roscpp rospy std_msgs)
+catkin_package()
+
 include_directories( 
-  ../include #added by Neal
+  # ../include #added by Neal
+  ./include #added by Neal
   ${OIS_INCLUDE_DIRS}
 	${OGRE_INCLUDE_DIRS}
 	${OGRE_SAMPLES_INCLUDEPATH}
@@ -113,13 +118,15 @@ include_directories(
   ${EIGEN_INCLUDE_DIRS} #added by Neal
   /usr/local/include #added by Neal, TODO /ode necessary?
   /usr/include/eigen3
+  ${catkin_INCLUDE_DIRS}
 )
  
 add_executable(OgreApp WIN32 ${HDRS} ${SRCS})
  
 set_target_properties(OgreApp PROPERTIES DEBUG_POSTFIX _d)
  
-target_link_libraries(OgreApp ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES}
+target_link_libraries(OgreApp ${OGRE_LIBRARIES} ${OIS_LIBRARIES} ${OGRE_Overlay_LIBRARIES} 
+    ${catkin_LIBRARIES}
     ) #added by Neal
  
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/bin)
@@ -194,21 +201,21 @@ if(WIN32)
 endif(WIN32)
 
 if(UNIX)
- 
+
 	install(TARGETS OgreApp
-		RUNTIME DESTINATION bin
+        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}/bin
 		CONFIGURATIONS All)
- 
-	install(DIRECTORY ${CMAKE_SOURCE_DIR}/dist/media
-		DESTINATION ./
+
+    install(DIRECTORY ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/src/dist/media
+        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 		CONFIGURATIONS Release RelWithDebInfo Debug
 	)
- 
-	install(FILES ${CMAKE_SOURCE_DIR}/dist/bin/plugins.cfg
-		${CMAKE_SOURCE_DIR}/dist/bin/resources.cfg
-		DESTINATION bin
+
+	install(FILES ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/src/dist/bin/plugins.cfg
+		${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/src/dist/bin/resources.cfg
+        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 		CONFIGURATIONS Release RelWithDebInfo Debug
 	)
- 
+
 endif(UNIX)
  

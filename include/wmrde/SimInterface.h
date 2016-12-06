@@ -32,11 +32,11 @@ public:
     SimInterface(SimInterface const& copy) = delete;            // Not Implemented
     SimInterface& operator=(SimInterface const& copy) = delete; // Not Implemented
     //These functions are to be used by the simulator (i.e. zoeController)
-    inline double getLastSpeedCommand() const
+    inline double getLastSpeedCmd() const
     {
         return mSpeedCmd;
     };
-    inline double getLastTurnRadiusCommand() const
+    inline double getLastTurnRadiusCmd() const
     {
         return mTurnRadiusCmd;
     };
