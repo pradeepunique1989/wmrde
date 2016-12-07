@@ -1,6 +1,9 @@
 #ifndef _WMRDE_ZOEMODEL_H_
 #define _WMRDE_ZOEMODEL_H_
 
+#include <wmrde/SimInterface.h>
+extern SimInterface simInterface;
+
 #include <wmrde/state.h>
 #include <wmrde/algebra/matrix.h>
 #include <wmrde/wheelgroundcontact.h>

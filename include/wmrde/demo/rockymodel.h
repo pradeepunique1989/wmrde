@@ -2,7 +2,7 @@
 #define _WMRDE_ROCKYMODEL_H_
 
 #include <wmrde/SimInterface.h>
-extern volatile SimInterface simInterface;
+extern SimInterface simInterface;
 
 #include <wmrde/state.h>
 #include <wmrde/algebra/matrix.h>

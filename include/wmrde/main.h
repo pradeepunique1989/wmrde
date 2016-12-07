@@ -23,8 +23,8 @@ void cleanup();
 
 // Variables for calculating speed of robot
 Eigen::Vector3d oldPos(0,0,0);
-std::ofstream of("pos.txt");
-void updateSimInterface(const double x,const double y,const double z,const double heading,const double dt,const double currentTime);
+// std::ofstream of("pos.txt");
+// void updateSimInterface(const double x,const double y,const double z,const double heading,const double dt,const double currentTime);
 
 void sub_initTrackContactGeom(const WmrModel& mdl, TrackContactGeom* contacts);
 // Global objects go here

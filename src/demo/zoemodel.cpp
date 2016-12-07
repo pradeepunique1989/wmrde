@@ -188,9 +188,17 @@ void zoeController(const WmrModel& mdl, const Real time, const Real state[], //i
 
 	Real speed,turnrad; //commanded speed, turn radius
 
-    // speed = simInterface.getLastSpeedCmd();
-	speed = .5;
-	turnrad = 1000;
+    // std::cout << "\nGot speed : " << simInterface.getLastSpeedCmd() << std::endl;
+    // Real value = 0.001 + simInterface.getLastSpeedCmd();
+    // double value = 0.5;
+    // double value = 0.001 + simInterface.getLastSpeedCmd()-0.001;
+    double value = simInterface.getLastSpeedCmd()-0.0000001;
+
+	speed = value;
+    std::cout << "\nGot new value : " << value << " , speed : " << speed << std::endl;
+    printf("PRINTF==> value = %f, speed = %f\n", value, simInterface.getLastSpeedCmd());//speed);
+    
+    turnrad = 1000;
 
 	
 	//if (time < .5) {

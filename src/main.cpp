@@ -1,12 +1,46 @@
 #include <wmrde/main.h>
 #include <ros/ros.h>
-#include <std_msgs/Float32.h>
+#include <geometry_msgs/Twist.h>
+#include <nav_msgs/Odometry.h>
 
-volatile float speed_msg = 0.0;
-void chatterCallback(const std_msgs::Float32::ConstPtr& msg)
+volatile double speed_msg = 0.0;
+volatile double omega_msg = 0.0;
+void twistCallback(const geometry_msgs::Twist::ConstPtr& msg)
 {
-  ROS_INFO("I heard: [%f]", msg->data);
-  speed_msg = msg->data;
+  // ROS_INFO("I heard: [%f]", msg->data);
+  speed_msg = msg->linear.x;
+  omega_msg = msg->angular.z;
+}
+void updateSimInterface(const double x,const double y,const double z,const double heading, const double dt, const double currentTime, const ros::Publisher& publisher)
+{
+    simInterface.setPositionX(x);
+    simInterface.setPositionY(y);
+    simInterface.setPositionZ(z);
+    simInterface.setHeading(heading);
+
+    // Compute robot speed
+    const Eigen::Vector3d currentPos(x,y,z); // we only care about 2d projection
+    double robotSpeed = (currentPos - oldPos).norm() / dt;
+    oldPos = currentPos;
+    simInterface.setSpeed(robotSpeed);
+    simInterface.setTime(currentTime);
+
+    geometry_msgs::Quaternion odom_quat;// = tf::createQuaternionMsgFromYaw(heading);
+    nav_msgs::Odometry odom;
+    odom.header.stamp = ros::Time::now();
+    odom.header.frame_id = "world";
+
+    odom.pose.pose.position.x = x;
+    odom.pose.pose.position.y = y;
+    odom.pose.pose.position.z = z;
+    odom.pose.pose.orientation = odom_quat;
+
+    odom.twist.twist.linear.x = robotSpeed;
+    odom.twist.twist.linear.y = 0;
+    odom.twist.twist.linear.z = 0;
+
+    publisher.publish(odom);
+
 }
 
 int main(int argc, char *argv[])
@@ -25,14 +59,15 @@ int main(int argc, char *argv[])
 void simulatorThread()
 {
     ros::NodeHandle n;
-    ros::Subscriber sub = n.subscribe("chatter", 1000, chatterCallback);
+    ros::Subscriber sub = n.subscribe("cmd_vel", 1, twistCallback);
+    ros::Publisher pub = n.advertise<nav_msgs::Odometry>("odom", 50);
 
     //set simulation options
     bool do_dyn = true; //do dynamic simulation, else kinematic
     bool ideal_actuators = false;
     bool do_anim = true; //do animation
 
-    const int dt_ms = 1;
+    const int dt_ms = 10;
     const Real dtSim = dt_ms / 1000.0;
     Real time = 0;
 
@@ -50,8 +85,8 @@ void simulatorThread()
      * This function sets up the model. Initializes the state of the model,
      * also uncomment the corresponding scene function below!
      */
-    rocky( mdl,state,qvel);
-    // zoe( mdl,state,qvel);
+    // rocky( mdl,state,qvel);
+    zoe( mdl,state,qvel);
 
 
     //initialize wheel-ground contact model
@@ -126,8 +161,8 @@ void simulatorThread()
     anim.start();
 
     //uncomment the scene function that corresponds to the model function above
-    rockyScene(mdl, anim);
-    // zoeScene(mdl, anim);
+    // rockyScene(mdl, anim);
+    zoeScene(mdl, anim);
 
     // render the surfaces
     for (int i=0; i<surfs.size(); i++)
@@ -135,10 +170,12 @@ void simulatorThread()
 
     init();
 
-
+    int count = 0;
+    const int ROS_UPDATE = 50;
     // Start simulation
     while(true)
     {
+        if ( (count++) % ROS_UPDATE == 0 )
         ros::spinOnce();
 
         odeDyn(time, y, mdl, surfs, contacts, dtSim, ydot, HT_parent, HT_world);
@@ -147,13 +184,13 @@ void simulatorThread()
         Vec3 pos;
         Vec3 ori;
         HTToPose(HT_world[0],ori,pos);
-        updateSimInterface(pos[0],pos[1],pos[2],ori[2],dtSim,time);
+        updateSimInterface(pos[0],pos[1],pos[2],ori[2],dtSim,time,pub);
 
         addmVec(ny,ydot,dtSim,y);
         time += dtSim;
 
-        std::cout <<"\n Here\n"<<std::endl;
-        // simInterface.setSpeedCmd(0.1);
+        // std::cout <<"\n Here\n"<<std::endl;
+        simInterface.setSpeedCmd(speed_msg);
 
         // Render the frame
         anim.updateNodesLines(nf, HT_parent, nw + nt, contacts);
@@ -163,6 +200,7 @@ void simulatorThread()
         // If pause button is pressed, pause the simulation temporarily
         while( true == anim.get_mPause() )
         {
+            std::cout << "\nPaused\n" << std::endl;
             if (!anim.updateRender())
             {
                 goto stop;
@@ -176,24 +214,6 @@ stop:
     cleanup();
     std::cout << "\nExiting simulator\n";
     exit(0);
-}
-void updateSimInterface(const double x,const double y,const double z,const double heading, const double dt, const double currentTime)
-{
-    simInterface.setPositionX(x);
-    simInterface.setPositionY(y);
-    simInterface.setPositionZ(z);
-    simInterface.setHeading(heading);
-
-    // Compute robot speed
-    const Eigen::Vector3d currentPos(x,y,0); // we only care about 2d projection
-    double robotSpeed = (currentPos - oldPos).norm() / dt;
-    oldPos = currentPos;
-    simInterface.setSpeed(robotSpeed);
-
-    simInterface.setTime(currentTime);
-
-    of << x << " " << y << " " << currentTime << " " << robotSpeed << std::endl;
-    of.flush();
 }
 void init()
 {
