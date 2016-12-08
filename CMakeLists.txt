@@ -105,7 +105,15 @@ file(GLOB_RECURSE SRCS
 set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}") #added by Neal
 
 
-find_package(catkin REQUIRED COMPONENTS roscpp rospy geometry_msgs std_msgs nav_msgs)
+find_package(catkin REQUIRED COMPONENTS
+    roscpp
+    rospy
+    geometry_msgs
+    std_msgs
+    nav_msgs
+    tf
+    tf_conversions
+    )
 catkin_package()
 
 include_directories( 

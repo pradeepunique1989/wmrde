@@ -221,8 +221,18 @@ void rockyController(const WmrModel& mdl, const Real time, const Real state[], /
 
 	Real speed,turnrad; //commanded speed, turn radius
 
-    speed = 0.40;//simInterface.getLastSpeedCmd();
-	turnrad = 1000;
+    double speed_cmd = simInterface.getLastSpeedCmd()-0.0000001;
+    double turn_cmd = simInterface.getLastTurnRadiusCmd()-0.0000001;
+
+	speed = 0.1;//speed_cmd;
+    if ( std::abs(turn_cmd) > 10e-3 )
+    {
+            turnrad = speed_cmd / turn_cmd;
+    }
+    else
+    {
+            turnrad = 1000;
+    }
 
 	
 	//if (time < 2.0) {
