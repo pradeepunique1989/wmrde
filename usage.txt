@@ -1,0 +1,2 @@
+1) Change paths in options.h
+2) Change paths in TerrainConfig.h

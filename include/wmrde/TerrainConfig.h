@@ -9,8 +9,8 @@ class TerrainConfig
 public:
     TerrainConfig();
 
-    // static TerrainConfig loadFromFile(const std::string fullFilePath = "/home/rpradeep/Documents/catkin_ws/src/wmrde/config/terrain.ini")
-    static TerrainConfig loadFromFile(const std::string fullFilePath = "/home/pradeepr/catkin_ws/src/wmrde/config/terrain.ini")
+    static TerrainConfig loadFromFile(const std::string fullFilePath = "/home/rpradeep/Documents/catkin_ws/src/wmrde/config/terrain.ini")
+    // static TerrainConfig loadFromFile(const std::string fullFilePath = "/home/pradeepr/catkin_ws/src/wmrde/config/terrain.ini")
     {
         TerrainConfig config;
         boost::property_tree::ptree pt;
