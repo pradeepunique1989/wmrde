@@ -71,6 +71,7 @@ find_package(catkin REQUIRED COMPONENTS
     nav_msgs
     tf
     tf_conversions
+    roslib
     )
 catkin_package()
 

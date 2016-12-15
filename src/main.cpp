@@ -1,9 +1,4 @@
 #include <wmrde/main.h>
-#include <ros/ros.h>
-#include <geometry_msgs/Twist.h>
-#include <nav_msgs/Odometry.h>
-#include <tf/transform_datatypes.h>
-#include <tf_conversions/tf_eigen.h>
 
 volatile double speed_msg = 0.0;
 volatile double omega_msg = 0.0;

@@ -5,16 +5,20 @@
 #include <wmrde/demo/terrains.h>
 #include <wmrde/demo/models.h>
 #include <wmrde/dynamics.h>
+#include <wmrde/SimInterface.h>
+#include <wmrde/TerrainConfig.h>
 
 #include <chrono>
 #include <boost/thread.hpp>
 #include <thread>
+#include <string>
 
-#include <wmrde/SimInterface.h>
-#include <wmrde/TerrainConfig.h>
-
-// MATLAB Engine
-// #include <engine.h>
+#include <ros/ros.h>
+#include <ros/package.h>
+#include <geometry_msgs/Twist.h>
+#include <nav_msgs/Odometry.h>
+#include <tf/transform_datatypes.h>
+#include <tf_conversions/tf_eigen.h>
 
 // Local function prototypes
 void simulatorThread();
@@ -31,5 +35,4 @@ void sub_initTrackContactGeom(const WmrModel& mdl, TrackContactGeom* contacts);
 
 WmrAnimation anim;
 SimInterface simInterface;
-TerrainConfig terrainInfo = TerrainConfig::loadFromFile();
-
+TerrainConfig terrainInfo = TerrainConfig::loadFromFile(ros::package::getPath("wmrde")+"/config/terrain.ini");
