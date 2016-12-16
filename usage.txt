@@ -1,2 +1,24 @@
-1) Change paths in options.h
-2) Change paths in TerrainConfig.h
+Pre-requisites:
+
+1) Install mercurial
+2) Clone Ogre into a directory:
+
+hg clone https://bitbucket.org/sinbad/ogre
+
+3) Go into that directory and :
+
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+
+4) If there are problems: refer to wmrde/src/README.txt
+
+wmrde package build and run:
+
+1) Clone wmrde into catkin_ws/src/
+2) Go to cakin_ws
+3) catkin_make install
+4) Change directory to catkin_ws/install/lib/wmrde/bin
+5) Run OgreApp
