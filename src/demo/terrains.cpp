@@ -31,7 +31,7 @@ void manyRamps(SurfaceVector& surfaces, const TerrainConfig& terrainInfo) {
     double x = 0;
     double y = 0;
     double z = 0.01;
-    const double segmentWidth = 10;
+    const double segmentWidth = 30;
 
     surfaces.emplace_back(new TriMeshSurf());
     TriMeshSurf* surf_ptr = dynamic_cast<TriMeshSurf*>(surfaces.back().get());
