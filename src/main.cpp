@@ -73,7 +73,8 @@ void simulatorThread()
     //set simulation options
     bool do_dyn = true; //do dynamic simulation, else kinematic
     bool ideal_actuators = false;
-    bool do_anim = true;//true; //do animation
+    // bool do_anim = true;//true; //do animation
+    bool do_anim = false;//true; //do animation
 
     const int dt_ms = 50;
     const Real dtSim = dt_ms / 1000.0;
