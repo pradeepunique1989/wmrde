@@ -3,10 +3,11 @@
 volatile double speed_msg = 0.0;
 volatile double omega_msg = 0.0;
 
-volatile bool reset = false;
-void resetCallback(const std_msgs::Bool msg)
+volatile bool step_simulator = false;
+void sim_step_callback(const std_msgs::Bool msg)
 {
-    reset = msg.data;
+    step_simulator = msg.data;
+    // printf("\nReceived trigger ... \n");
 }
 void twistCallback(const geometry_msgs::Twist::ConstPtr& msg)
 {
@@ -77,9 +78,8 @@ void simulatorThread()
     ros::Publisher pub = n.advertise<nav_msgs::Odometry>("odom", 1);
     ros::Publisher timer_tick_pub = n.advertise<std_msgs::Float64>("/sim_time", 1);
 
-    ros::Subscriber reset_sub = n.subscribe("sim_reset", 1, resetCallback);
+    ros::Subscriber sim_step_sub = n.subscribe("sim_step", 1, sim_step_callback);
 
-lbl_restart:
     
     //set simulation options
     bool do_dyn = true; //do dynamic simulation, else kinematic
@@ -199,10 +199,19 @@ lbl_restart:
     // Start simulation
     while(true)
     {
-        if ( true == reset )
+        if ( true == step_simulator )
         {
-            reset = false;
-            goto lbl_restart;
+            step_simulator = false;
+            timer_tick_pub.publish(time);
+        }
+        else
+        {
+            if (true == do_anim && !anim.updateRender())
+                goto stop;
+            // printf("\n Waiting for trigger ...\n");
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            ros::spinOnce();
+            continue;
         }
         if ( (count++) % ROS_UPDATE_COUNT == 0 )
         {
@@ -231,17 +240,6 @@ lbl_restart:
             goto stop;
         }
 
-        // If pause button is pressed, pause the simulation temporarily
-        // while( true == anim.get_mPause() )
-        // {
-        //     std::cout << "\nPaused\n" << std::endl;
-        //     if (!anim.updateRender())
-        //     {
-        //         goto stop;
-        //     }
-        //     std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        //     continue;
-        // }
 
         if ( true == ros_update )
         {
@@ -249,8 +247,7 @@ lbl_restart:
             ros_update = false;
             ros::spinOnce();
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(dt_ms));
-        timer_tick_pub.publish(time);
+        // std::this_thread::sleep_for(std::chrono::milliseconds(dt_ms));
     }
 
 stop:
