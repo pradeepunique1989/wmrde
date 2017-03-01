@@ -16,6 +16,8 @@
 #include <ros/ros.h>
 #include <ros/package.h>
 #include <geometry_msgs/Twist.h>
+#include <std_msgs/Float64.h>
+#include <std_msgs/Bool.h>
 #include <nav_msgs/Odometry.h>
 #include <tf/transform_datatypes.h>
 #include <tf_conversions/tf_eigen.h>

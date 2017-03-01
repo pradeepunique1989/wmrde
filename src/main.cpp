@@ -2,6 +2,12 @@
 
 volatile double speed_msg = 0.0;
 volatile double omega_msg = 0.0;
+
+volatile bool reset = false;
+void resetCallback(const std_msgs::Bool msg)
+{
+    reset = msg.data;
+}
 void twistCallback(const geometry_msgs::Twist::ConstPtr& msg)
 {
   // ROS_INFO("I heard: [%f]", msg->data);
@@ -69,12 +75,17 @@ void simulatorThread()
     ros::NodeHandle n;
     ros::Subscriber sub = n.subscribe("cmd_vel", 1, twistCallback);
     ros::Publisher pub = n.advertise<nav_msgs::Odometry>("odom", 1);
+    ros::Publisher timer_tick_pub = n.advertise<std_msgs::Float64>("/sim_time", 1);
 
+    ros::Subscriber reset_sub = n.subscribe("sim_reset", 1, resetCallback);
+
+lbl_restart:
+    
     //set simulation options
     bool do_dyn = true; //do dynamic simulation, else kinematic
     bool ideal_actuators = false;
-    // bool do_anim = true;//true; //do animation
-    bool do_anim = false;//true; //do animation
+    bool do_anim = true;//true; //do animation
+    // bool do_anim = false;//true; //do animation
 
     const int dt_ms = 50;
     const Real dtSim = dt_ms / 1000.0;
@@ -183,11 +194,16 @@ void simulatorThread()
     }
 
     int count = 0;
-    const int ROS_UPDATE_COUNT = 50;
+    const int ROS_UPDATE_COUNT = 1;
     bool ros_update = false;
     // Start simulation
     while(true)
     {
+        if ( true == reset )
+        {
+            reset = false;
+            goto lbl_restart;
+        }
         if ( (count++) % ROS_UPDATE_COUNT == 0 )
         {
             ros_update = true;
@@ -230,9 +246,11 @@ void simulatorThread()
         if ( true == ros_update )
         {
             updateSimInterface(pos[0],pos[1],pos[2],ori[0],ori[1],ori[2],dtSim,time,pub);
+            ros_update = false;
             ros::spinOnce();
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(dt_ms));
+        timer_tick_pub.publish(time);
     }
 
 stop:
