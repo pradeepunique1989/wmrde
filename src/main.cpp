@@ -25,7 +25,7 @@ void updateSimInterface(const double x,const double y,const double z,const doubl
     simInterface.setHeading(heading);
 
     // Compute robot speed
-    const Eigen::Vector3d currentPos(x,y,z); // we only care about 2d projection
+    const Eigen::Vector3d currentPos(x,y,z); 
     const Eigen::Vector3d velocity = (currentPos-oldPos) / dt;
     tf::Vector3 localVelocity_tmp;
     tf::vectorEigenToTF(velocity,localVelocity_tmp);
