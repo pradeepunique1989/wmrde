@@ -2,8 +2,10 @@
 
 volatile double speed_msg = 0.0;
 volatile double omega_msg = 0.0;
-
 volatile bool step_simulator = false;
+
+bool do_animation = true;
+
 void sim_step_callback(const std_msgs::Bool msg)
 {
     step_simulator = msg.data;
@@ -57,10 +59,25 @@ void updateSimInterface(const double x,const double y,const double z,const doubl
     publisher.publish(odom);
 
 }
+void ctrl_c_handler(int s){
+    printf("\nCtrl-c pressed\n");
+           exit(1); 
 
+}
 int main(int argc, char *argv[])
 {
     ros::init(argc, argv, "ugv_simulator");
+
+    if ( argc > 1 )
+    {
+        const std::string input_arg(argv[1]);
+        const std::string arg("--noanim");
+        if ( !input_arg.compare(arg) )
+        {
+            do_animation = false;
+        }
+    }
+    signal(SIGINT, ctrl_c_handler);
 
     boost::thread simThread(&simulatorThread);
     // ros::spin();
@@ -84,7 +101,7 @@ void simulatorThread()
     //set simulation options
     bool do_dyn = true; //do dynamic simulation, else kinematic
     bool ideal_actuators = false;
-    bool do_anim = true;//true; //do animation
+    bool do_anim = do_animation;//true; //do animation
     // bool do_anim = false;//true; //do animation
 
     const int dt_ms = 50;

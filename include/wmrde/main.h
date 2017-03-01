@@ -8,6 +8,8 @@
 #include <wmrde/SimInterface.h>
 #include <wmrde/TerrainConfig.h>
 
+#include <csignal>
+
 #include <chrono>
 #include <boost/thread.hpp>
 #include <thread>
