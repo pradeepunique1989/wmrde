@@ -103,7 +103,7 @@ void zoe(WmrModel& mdl, Real state[], Real qvel[]) {
 
 	mdl.actuatorModel = zoeAct;
 	mdl.act_p[0] = 2e3; //Kp
-	mdl.act_p[1] = 0.0; //Ki
+	mdl.act_p[1] = 0; //Ki
 	mdl.act_p[2] = REALMAX; //max
 
 	//ODE contact model parameters

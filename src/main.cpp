@@ -5,10 +5,16 @@ volatile double omega_msg = 0.0;
 volatile bool step_simulator = false;
 
 bool do_animation = true;
+bool kill_simulator = false;
 
 void sim_step_callback(const std_msgs::Bool msg)
 {
     step_simulator = msg.data;
+    // printf("\nReceived trigger ... \n");
+}
+void sim_kill_callback(const std_msgs::Bool msg)
+{
+    kill_simulator = msg.data;
     // printf("\nReceived trigger ... \n");
 }
 void twistCallback(const geometry_msgs::Twist::ConstPtr& msg)
@@ -59,11 +65,6 @@ void updateSimInterface(const double x,const double y,const double z,const doubl
     publisher.publish(odom);
 
 }
-void ctrl_c_handler(int s){
-    printf("\nCtrl-c pressed\n");
-           exit(1); 
-
-}
 int main(int argc, char *argv[])
 {
     ros::init(argc, argv, "ugv_simulator");
@@ -77,7 +78,6 @@ int main(int argc, char *argv[])
             do_animation = false;
         }
     }
-    signal(SIGINT, ctrl_c_handler);
 
     boost::thread simThread(&simulatorThread);
     // ros::spin();
@@ -96,6 +96,7 @@ void simulatorThread()
     ros::Publisher timer_tick_pub = n.advertise<std_msgs::Float64>("/sim_time", 1);
 
     ros::Subscriber sim_step_sub = n.subscribe("sim_step", 1, sim_step_callback);
+    ros::Subscriber kill_step_sub = n.subscribe("sim_kill", 1, sim_kill_callback);
 
     
     //set simulation options
@@ -220,6 +221,10 @@ void simulatorThread()
         {
             step_simulator = false;
             timer_tick_pub.publish(time);
+        }
+        else if ( true == kill_simulator )
+        {
+            goto stop;
         }
         else
         {
